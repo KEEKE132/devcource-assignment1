@@ -28,4 +28,10 @@ public class PostList {
         return false;
     }
 
+    public void printAll(){
+        for(Post post : posts){
+            post.print();
+        }
+    }
+
 }

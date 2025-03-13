@@ -30,11 +30,27 @@ public class Program {
                 else if (checkRead(command)) ;
                 else if (checkDelete(command)) ;
                 else if (checkUpdate(command)) ;
+                else if (checkReadAll(command)) ;
                 else System.out.println("존재하지 않는 명령어입니다.");
             } catch (NoExistPostException e) {
                 System.out.println("존재하지 않는 게시글 입니다.");
+            } finally {
+                System.out.println("--------------------");
             }
         }
+    }
+    private Post findPost(Long id) throws IOException, NoExistPostException {
+        Post post = postList.get(id);
+        if(post==null) {
+            throw new NoExistPostException();
+        }
+        return post;
+    }
+
+    private Long inputNumber() throws IOException {
+        System.out.println("게시글 번호를 입력해 주십시오: ");
+        Long number = Long.parseLong(br.readLine());
+        return number;
     }
 
     private boolean checkExit(String command) {
@@ -73,18 +89,14 @@ public class Program {
         return false;
     }
 
-    private Post findPost(Long id) throws IOException, NoExistPostException {
-        Post post = postList.get(id);
-        if(post==null) {
-            throw new NoExistPostException();
+    private boolean checkReadAll(String command){
+        if(command.equals("목록")){
+            System.out.println("전체 게시글 목록입니다.");
+            System.out.println("--------------------");
+            postList.printAll();
+            return true;
         }
-        return post;
-    }
-
-    private Long inputNumber() throws IOException {
-        System.out.println("게시글 번호를 입력해 주십시오: ");
-        Long number = Long.parseLong(br.readLine());
-        return number;
+        return false;
     }
 
     private void readPost(Post post) {
