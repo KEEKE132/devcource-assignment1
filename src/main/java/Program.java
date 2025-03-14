@@ -11,7 +11,7 @@ public class Program {
 
     private Long recentId = 0L;
 
-    public void run(){
+    public void run() {
         System.out.println("프로그램을 시작합니다");
         try {
             readCommand();
@@ -21,7 +21,7 @@ public class Program {
     }
 
     private void readCommand() throws IOException {
-        while(true) {
+        while (true) {
             try {
                 System.out.print("명령어 > ");
                 String command = br.readLine();
@@ -39,9 +39,10 @@ public class Program {
             }
         }
     }
+
     private Post findPost(Long id) throws IOException, NoExistPostException {
         Post post = postList.get(id);
-        if(post==null) {
+        if (post == null) {
             throw new NoExistPostException();
         }
         return post;
@@ -54,7 +55,7 @@ public class Program {
     }
 
     private boolean checkExit(String command) {
-        if(command.equals("exit")|| command.equals("종료")){
+        if (command.equals("exit") || command.equals("종료")) {
             System.out.println("프로그램이 종료됩니다.");
             return true;
         }
@@ -62,7 +63,7 @@ public class Program {
     }
 
     private boolean checkWrite(String command) throws IOException {
-        if(command.equals("작성")){
+        if (command.equals("작성")) {
             System.out.println("게시글을 작성합니다.");
             postList.add(writePost());
             System.out.println("게시글이 작성되었습니다.");
@@ -81,15 +82,15 @@ public class Program {
     }
 
     private boolean checkRead(String command) throws IOException, NoExistPostException {
-        if(command.equals("조회")){
+        if (command.equals("조회")) {
             readPost(inputNumber());
             return true;
         }
         return false;
     }
 
-    private boolean checkReadAll(String command){
-        if(command.equals("목록")){
+    private boolean checkReadAll(String command) {
+        if (command.equals("목록")) {
             System.out.println("전체 게시글 목록입니다.");
             System.out.println("--------------------");
             postList.printAll();
@@ -104,7 +105,7 @@ public class Program {
     }
 
     private boolean checkDelete(String command) throws IOException {
-        if(command.equals("삭제")){
+        if (command.equals("삭제")) {
             deletePost(inputNumber());
             System.out.println("게시글이 삭제되었습니다.");
             return true;
@@ -117,7 +118,7 @@ public class Program {
     }
 
     private boolean checkUpdate(String command) throws IOException, NoExistPostException {
-        if(command.equals("수정")){
+        if (command.equals("수정")) {
             updatePost(inputNumber());
             System.out.println("게시글이 수정되었습니다.");
             return true;
