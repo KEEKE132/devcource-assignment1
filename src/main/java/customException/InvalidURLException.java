@@ -1,4 +1,4 @@
-package CustomException;
+package customException;
 
 public class InvalidURLException extends Exception {
     public InvalidURLException(String message) {

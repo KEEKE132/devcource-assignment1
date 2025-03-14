@@ -1,4 +1,6 @@
-import CustomException.InvalidURLException;
+package url;
+
+import customException.InvalidURLException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +12,14 @@ public class UrlData {
     private List<String> path;
     private Map<String, String> parameter;
 
+    private final static UrlParser urlParser = new UrlParserImpl();
+
     public UrlData(String url) throws InvalidURLException {
         this.url = url;
         path = new ArrayList<>();
         parameter = new HashMap<>();
-        path.addAll(UrlParser.parsePath(url));
-        parameter.putAll(UrlParser.parseParameter(url));
+        path.addAll(urlParser.parsePath(url));
+        parameter.putAll(urlParser.parseParameter(url));
     }
 
     public String getURL() {
@@ -27,16 +31,8 @@ public class UrlData {
         return new ArrayList<>(result);
     }
 
-    public void addPath(String path) {
-        this.path.add(path);
-    }
-
     public void addPath(Iterable<String> path) {
         for (String p : path) this.path.add(p);
-    }
-
-    public void addParameter(String key, String value) {
-        this.parameter.put(key, value);
     }
 
     public void addParameter(Map<String, String> parameter) {

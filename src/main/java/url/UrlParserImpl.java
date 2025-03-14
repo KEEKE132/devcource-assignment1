@@ -1,19 +1,22 @@
-import CustomException.InvalidURLException;
+package url;
+
+import customException.InvalidURLException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class UrlParser {
-
-    public static UrlData parseUrlData(String url) throws InvalidURLException {
+public class UrlParserImpl implements UrlParser {
+    @Override
+    public UrlData parseUrlData(String url) throws InvalidURLException {
         UrlData result = new UrlData(url);
         result.addPath(parsePath(url));
         result.addParameter(parseParameter(url));
         return result;
     }
 
-    public static List<String> parsePath(String url) throws InvalidURLException {
+    @Override
+    public List<String> parsePath(String url) throws InvalidURLException {
         if (!url.startsWith("/")) {
             throw new InvalidURLException("URL이 유효하지 않습니다.");
         }
@@ -29,7 +32,8 @@ public class UrlParser {
         return result;
     }
 
-    public static Map<String, String> parseParameter(String url) throws InvalidURLException {
+    @Override
+    public Map<String, String> parseParameter(String url) throws InvalidURLException {
         Map<String, String> result = new java.util.HashMap<>();
         if (!url.contains("?")) {
             return result;

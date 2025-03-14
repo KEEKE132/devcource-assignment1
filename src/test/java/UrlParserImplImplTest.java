@@ -1,7 +1,8 @@
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import url.UrlData;
 
-class UrlParserTest {
+class UrlParserImplImplTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/board", "/boards/", "/boards?test1=1&test2=2", "/boards/?test1=1&test2=2"})

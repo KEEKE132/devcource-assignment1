@@ -1,4 +1,4 @@
-package CustomException;
+package customException;
 
 public class NoExistPostException extends Exception {
     public NoExistPostException(String message) {

@@ -1,3 +1,5 @@
+package post;
+
 public class Post {
     private Long id;
     private String title;
@@ -29,7 +31,7 @@ public class Post {
         return id;
     }
 
-    public void print(){
+    public void print() {
         StringBuilder sb = new StringBuilder();
         sb.append(id).append("번 게시글").append("\n");
         sb.append("제목: ").append(title).append("\n");
