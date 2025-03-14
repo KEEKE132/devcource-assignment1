@@ -82,8 +82,7 @@ public class Program {
 
     private boolean checkRead(String command) throws IOException, NoExistPostException {
         if(command.equals("조회")){
-            Post post = findPost(inputNumber());
-            readPost(post);
+            readPost(inputNumber());
             return true;
         }
         return false;
@@ -99,7 +98,8 @@ public class Program {
         return false;
     }
 
-    private void readPost(Post post) {
+    private void readPost(Long id) throws IOException, NoExistPostException {
+        Post post = findPost(id);
         post.print();
     }
 
@@ -118,14 +118,15 @@ public class Program {
 
     private boolean checkUpdate(String command) throws IOException, NoExistPostException {
         if(command.equals("수정")){
-            updatePost(findPost(inputNumber()));
+            updatePost(inputNumber());
             System.out.println("게시글이 수정되었습니다.");
             return true;
         }
         return false;
     }
 
-    private void updatePost(Post post) throws IOException {
+    private void updatePost(Long id) throws IOException, NoExistPostException {
+        Post post = findPost(id);
         System.out.print("제목을 입력해 주십시오. : ");
         String title = br.readLine();
         System.out.print("내용을 입력해 주십시오. : ");
