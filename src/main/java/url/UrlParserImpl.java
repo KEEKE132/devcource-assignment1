@@ -1,6 +1,6 @@
 package url;
 
-import customException.InvalidURLException;
+import customException.InvalidUrlException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class UrlParserImpl implements UrlParser {
     @Override
-    public UrlData parseUrlData(String url) throws InvalidURLException {
+    public UrlData parseUrlData(String url) throws InvalidUrlException {
         UrlData result = new UrlData(url);
         result.addPath(parsePath(url));
         result.addParameter(parseParameter(url));
@@ -16,9 +16,9 @@ public class UrlParserImpl implements UrlParser {
     }
 
     @Override
-    public List<String> parsePath(String url) throws InvalidURLException {
+    public List<String> parsePath(String url) throws InvalidUrlException {
         if (!url.startsWith("/")) {
-            throw new InvalidURLException("URL이 유효하지 않습니다.");
+            throw new InvalidUrlException("URL이 유효하지 않습니다.");
         }
         List<String> result = new ArrayList<>();
         if (url.contains("?")) {
@@ -33,7 +33,7 @@ public class UrlParserImpl implements UrlParser {
     }
 
     @Override
-    public Map<String, String> parseParameter(String url) throws InvalidURLException {
+    public Map<String, String> parseParameter(String url) throws InvalidUrlException {
         Map<String, String> result = new java.util.HashMap<>();
         if (!url.contains("?")) {
             return result;
@@ -43,7 +43,7 @@ public class UrlParserImpl implements UrlParser {
         for (String s : splittedParameter) {
             String[] keyValue = s.split("=");
             if (keyValue.length != 2) {
-                throw new InvalidURLException("파라미터 형식이 유효하지 않습니다.");
+                throw new InvalidUrlException("파라미터 형식이 유효하지 않습니다.");
             }
             result.put(keyValue[0], keyValue[1]);
         }

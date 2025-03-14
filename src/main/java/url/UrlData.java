@@ -1,6 +1,6 @@
 package url;
 
-import customException.InvalidURLException;
+import customException.InvalidUrlException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ public class UrlData {
 
     private final static UrlParser urlParser = new UrlParserImpl();
 
-    public UrlData(String url) throws InvalidURLException {
+    public UrlData(String url) throws InvalidUrlException {
         this.url = url;
         path = new ArrayList<>();
         parameter = new HashMap<>();
