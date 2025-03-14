@@ -1,11 +1,14 @@
+package program;
+
 import customException.NoExistPostException;
 import post.Post;
+import post.PostList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Program {
+public class CommandProgram implements Program {
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     private PostList postList = new PostList();
@@ -41,7 +44,7 @@ public class Program {
         }
     }
 
-    private Post findPost(Long id) throws IOException, NoExistPostException {
+    private Post findPost(Long id) throws NoExistPostException {
         Post post = postList.get(id);
         if (post == null) {
             throw new NoExistPostException();
@@ -100,7 +103,7 @@ public class Program {
         return false;
     }
 
-    private void readPost(Long id) throws IOException, NoExistPostException {
+    private void readPost(Long id) throws NoExistPostException {
         Post post = findPost(id);
         post.print();
     }
