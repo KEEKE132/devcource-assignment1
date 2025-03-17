@@ -1,12 +1,14 @@
 package post;
 
 public class Post {
-    private Long id;
+    private static Long idCounter = 1L;
+
+    private final Long id;
     private String title;
     private String content;
 
-    public Post(Long id, String title, String content) {
-        this.id = id;
+    public Post(String title, String content) {
+        this.id = idCounter++;
         this.title = title;
         this.content = content;
     }

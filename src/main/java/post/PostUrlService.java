@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 public class PostUrlService {
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private PostList postList = new PostList();
-    private Long recentId = 0L;
 
     private Post findPost(Long id) throws NoExistPostException {
         Post post = postList.get(id);
@@ -39,25 +38,18 @@ public class PostUrlService {
         System.out.print("내용을 입력해 주십시오. : ");
         String content = br.readLine();
 
-        return new Post(++recentId, title, content);
+        return new Post(title, content);
     }
 
     public boolean checkRead(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
-        String first = urlData.getPath().get(0);
-        if (first.equals("view")) {
-            Long postId = getPostId(urlData);
-            readPost(postId);
-            return true;
-        }
-        return false;
-    }
-
-    private static Long getPostId(UrlData urlData) throws NoExistParameterException, InvalidValueException {
         try {
-            if (!urlData.getParameter().containsKey("postId")) {
-                throw new NoExistParameterException("postId");
+            String first = urlData.getPath().get(0);
+            if (first.equals("view")) {
+                Long postId = Long.parseLong(urlData.getParameter("postId"));
+                readPost(postId);
+                return true;
             }
-            return Long.parseLong(urlData.getParameter().get("postId"));
+            return false;
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
@@ -81,26 +73,36 @@ public class PostUrlService {
 
     public boolean checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
         String first = urlData.getPath().get(0);
-        if (first.equals("remove")) {
-            deletePost(getPostId(urlData));
-            System.out.println("게시글이 삭제되었습니다.");
-            return true;
+        try {
+            if (first.equals("remove")) {
+                Long postId = Long.parseLong(urlData.getParameter("postId"));
+                deletePost(postId);
+                System.out.println("게시글이 삭제되었습니다.");
+                return true;
+            }
+            return false;
+        } catch (NumberFormatException e) {
+            throw new InvalidValueException("postId", e);
         }
-        return false;
     }
 
     private void deletePost(Long id) {
         postList.remove(id);
     }
-    
+
     public boolean checkUpdate(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
         String first = urlData.getPath().get(0);
-        if (first.equals("edit")) {
-            updatePost(getPostId(urlData));
-            System.out.println("게시글이 수정되었습니다.");
-            return true;
+        try {
+            if (first.equals("edit")) {
+                Long postId = Long.parseLong(urlData.getParameter("postId"));
+                updatePost(postId);
+                System.out.println("게시글이 수정되었습니다.");
+                return true;
+            }
+            return false;
+        } catch (NumberFormatException e) {
+            throw new InvalidValueException("postId", e);
         }
-        return false;
     }
 
     private void updatePost(Long id) throws IOException, NoExistPostException {
@@ -111,7 +113,5 @@ public class PostUrlService {
         String content = br.readLine();
         post.setTitle(title);
         post.setContent(content);
-
-        postList.replace(post.getId(), post);
     }
 }

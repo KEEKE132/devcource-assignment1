@@ -41,7 +41,7 @@ public class PostCommandService {
         System.out.print("내용을 입력해 주십시오. : ");
         String content = br.readLine();
 
-        return new Post(++recentId, title, content);
+        return new Post(title, content);
     }
 
     public boolean checkRead(String command) throws IOException, NoExistPostException {

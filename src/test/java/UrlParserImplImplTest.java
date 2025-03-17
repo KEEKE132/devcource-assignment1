@@ -10,7 +10,7 @@ class UrlParserImplImplTest {
         try {
             UrlData urlData = new UrlData(str);
             System.out.println(urlData.getPath());
-            System.out.println(urlData.getParameter());
+            System.out.println(urlData.getParameters());
         } catch (Exception e) {
             e.printStackTrace();
         }

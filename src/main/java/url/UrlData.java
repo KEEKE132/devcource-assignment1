@@ -1,6 +1,7 @@
 package url;
 
 import customException.InvalidUrlException;
+import customException.NoExistParameterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +40,14 @@ public class UrlData {
         this.parameter.putAll(parameter);
     }
 
-    public Map<String, String> getParameter() {
+    public Map<String, String> getParameters() {
         return new HashMap<>(this.parameter);
     }
 
-    public String getParameterValue(String key) {
-        return this.parameter.get(key);
+    public String getParameter(String param) throws NoExistParameterException {
+        if (parameter.containsKey(param)) {
+            throw new NoExistParameterException(param);
+        }
+        return parameter.get(param);
     }
 }
