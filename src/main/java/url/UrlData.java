@@ -12,7 +12,6 @@ public class UrlData {
     private String url;
     private List<String> path;
     private Map<String, String> parameter;
-
     private final static UrlParser urlParser = new UrlParserImpl();
 
     public UrlData(String url) throws InvalidUrlException {
@@ -45,7 +44,7 @@ public class UrlData {
     }
 
     public String getParameter(String param) throws NoExistParameterException {
-        if (parameter.containsKey(param)) {
+        if (!parameter.containsKey(param)) {
             throw new NoExistParameterException(param);
         }
         return parameter.get(param);

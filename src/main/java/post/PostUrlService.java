@@ -21,15 +21,10 @@ public class PostUrlService {
         return post;
     }
 
-    public boolean checkWrite(UrlData urlData) throws IOException {
-        String first = urlData.getPath().get(0);
-        if (first.equals("add")) {
-            System.out.println("게시글을 작성합니다.");
-            postList.add(writePost());
-            System.out.println("게시글이 작성되었습니다.");
-            return true;
-        }
-        return false;
+    public void checkWrite(UrlData urlData) throws IOException {
+        System.out.println("게시글을 작성합니다.");
+        postList.add(writePost());
+        System.out.println("게시글이 작성되었습니다.");
     }
 
     private Post writePost() throws IOException {
@@ -41,15 +36,10 @@ public class PostUrlService {
         return new Post(title, content);
     }
 
-    public boolean checkRead(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
+    public void checkRead(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
         try {
-            String first = urlData.getPath().get(0);
-            if (first.equals("view")) {
-                Long postId = Long.parseLong(urlData.getParameter("postId"));
-                readPost(postId);
-                return true;
-            }
-            return false;
+            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            readPost(postId);
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
@@ -71,16 +61,11 @@ public class PostUrlService {
         post.print();
     }
 
-    public boolean checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
-        String first = urlData.getPath().get(0);
+    public void checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
         try {
-            if (first.equals("remove")) {
-                Long postId = Long.parseLong(urlData.getParameter("postId"));
-                deletePost(postId);
-                System.out.println("게시글이 삭제되었습니다.");
-                return true;
-            }
-            return false;
+            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            deletePost(postId);
+            System.out.println("게시글이 삭제되었습니다.");
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
@@ -90,16 +75,11 @@ public class PostUrlService {
         postList.remove(id);
     }
 
-    public boolean checkUpdate(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
-        String first = urlData.getPath().get(0);
+    public void checkUpdate(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
         try {
-            if (first.equals("edit")) {
-                Long postId = Long.parseLong(urlData.getParameter("postId"));
-                updatePost(postId);
-                System.out.println("게시글이 수정되었습니다.");
-                return true;
-            }
-            return false;
+            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            updatePost(postId);
+            System.out.println("게시글이 수정되었습니다.");
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }

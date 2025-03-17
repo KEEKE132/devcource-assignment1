@@ -1,9 +1,13 @@
 package program;
 
+import board.BoardUrlController;
+import board.BoardUrlService;
 import customException.InvalidUrlException;
 import customException.InvalidValueException;
+import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import post.PostUrlController;
 import post.PostUrlService;
 import url.UrlData;
 
@@ -13,7 +17,8 @@ import java.io.InputStreamReader;
 
 public class UrlProgram implements Program {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private final PostUrlService postService = new PostUrlService();
+    private final PostUrlController postUrlController = new PostUrlController(new PostUrlService());
+    private final BoardUrlController boardUrlController = new BoardUrlController(new BoardUrlService());
 
     @Override
     public void run() {
@@ -32,6 +37,8 @@ public class UrlProgram implements Program {
                 System.out.println("필요한 파라미터가 없습니다.: " + e.getMessage());
             } catch (InvalidValueException e) {
                 System.out.println("값이 올바르지 않습니다.: " + e.getMessage());
+            } catch (NoExistBoardException e) {
+                System.out.println("존재하지 않는 게시판 입니다.");
             } finally {
                 System.out.println("--------------------");
             }
@@ -39,17 +46,15 @@ public class UrlProgram implements Program {
         System.out.println("프로그램을 종료합니다.");
     }
 
-    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException {
+    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException, NoExistBoardException {
         try {
             System.out.print("a");
             String url = br.readLine();
             UrlData urlData = new UrlData(url);
             if (checkExit(urlData)) return false;
-            if (postService.checkWrite(urlData)) return true;
-            else if (postService.checkRead(urlData)) return true;
-            else if (postService.checkDelete(urlData)) return true;
-            else if (postService.checkUpdate(urlData)) return true;
-//            else if (postService.(urlData)) ;
+
+            if (postUrlController.checkPath(urlData)) return true;
+            else if (boardUrlController.checkPath(urlData)) return true;
             throw new InvalidUrlException();
         } catch (InvalidUrlException e) {
             System.out.println("URL이 올바르지 않습니다.");

@@ -38,6 +38,10 @@ public class UrlParserImpl implements UrlParser {
         if (!url.contains("?")) {
             return result;
         }
+        if (url.lastIndexOf("?") != url.indexOf("?")) {
+            throw new InvalidUrlException("파라미터 형식이 유효하지 않습니다.");
+        }
+
         url = url.substring(url.indexOf("?") + 1);
         String[] splittedParameter = url.split("&");
         for (String s : splittedParameter) {
