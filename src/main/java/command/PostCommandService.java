@@ -1,6 +1,8 @@
-package post;
+package command;
 
 import customException.NoExistPostException;
+import post.Post;
+import post.PostList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
