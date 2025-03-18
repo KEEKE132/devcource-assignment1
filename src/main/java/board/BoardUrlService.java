@@ -4,7 +4,7 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import post.Post;
-import post.PostList;
+import post.PostRepository;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -13,16 +13,16 @@ import java.io.InputStreamReader;
 
 public class BoardUrlService {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private final BoardList boardList;
-    private final PostList postList;
+    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
-    public BoardUrlService(BoardList boardList, PostList postList) {
-        this.boardList = boardList;
-        this.postList = postList;
+    public BoardUrlService(BoardRepository boardRepository, PostRepository postRepository) {
+        this.boardRepository = boardRepository;
+        this.postRepository = postRepository;
     }
 
     private Board findBoard(Long id) throws NoExistBoardException {
-        Board board = boardList.get(id);
+        Board board = boardRepository.get(id);
         if (board == null) {
             throw new NoExistBoardException();
         }
@@ -30,7 +30,7 @@ public class BoardUrlService {
     }
 
     private Board findBoard(String name) throws NoExistBoardException {
-        Board board = boardList.get(name);
+        Board board = boardRepository.get(name);
         if (board == null) {
             throw new NoExistBoardException();
         }
@@ -48,7 +48,7 @@ public class BoardUrlService {
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();
 
-        boardList.add(new Board(title));
+        boardRepository.add(new Board(title));
     }
 
     public void checkRead(UrlData urlData) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
@@ -75,11 +75,11 @@ public class BoardUrlService {
     }
 
     private void readBoard(String name) throws NoExistBoardException {
-        Long boardId = boardList.get(name).getId();
+        Long boardId = boardRepository.get(name).getId();
         StringBuilder sb = new StringBuilder();
         sb.append(boardId).append("번 게시판\n");
         sb.append("글 번호\t글 제목\t작성일").append("\n");
-        for (Post p : postList.getPostsByBoardId(boardId)) {
+        for (Post p : postRepository.getPostsByBoardId(boardId)) {
             sb.append(p.getId()).append("\t").append(p.getTitle()).append("\t").append(p.getCreatedAt()).append("\n");
         }
         System.out.println(sb);
@@ -96,8 +96,8 @@ public class BoardUrlService {
     }
 
     private void deleteBoard(Long id) {
-        boardList.remove(id);
-        postList.removeByBoardId(id);
+        boardRepository.remove(id);
+        postRepository.removeByBoardId(id);
     }
 
     public void checkUpdate(UrlData urlData) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {

@@ -1,6 +1,6 @@
 package program;
 
-import board.BoardList;
+import board.BoardRepository;
 import board.BoardUrlController;
 import board.BoardUrlService;
 import customException.InvalidUrlException;
@@ -8,7 +8,7 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
-import post.PostList;
+import post.PostRepository;
 import post.PostUrlController;
 import post.PostUrlService;
 import url.UrlData;
@@ -23,10 +23,10 @@ public class UrlProgram implements Program {
     private final BoardUrlController boardUrlController;
 
     public UrlProgram() {
-        PostList postList = new PostList();
-        BoardList boardList = new BoardList();
-        PostUrlService postUrlService = new PostUrlService(postList, boardList);
-        BoardUrlService boardUrlService = new BoardUrlService(boardList, postList);
+        PostRepository postRepository = new PostRepository();
+        BoardRepository boardRepository = new BoardRepository();
+        PostUrlService postUrlService = new PostUrlService(postRepository, boardRepository);
+        BoardUrlService boardUrlService = new BoardUrlService(boardRepository, postRepository);
         this.postUrlController = new PostUrlController(postUrlService);
         this.boardUrlController = new BoardUrlController(boardUrlService);
     }

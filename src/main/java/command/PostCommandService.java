@@ -2,7 +2,7 @@ package command;
 
 import customException.NoExistPostException;
 import post.Post;
-import post.PostList;
+import post.PostRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,11 +10,11 @@ import java.io.InputStreamReader;
 
 public class PostCommandService {
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private PostList postList = new PostList();
+    private PostRepository postRepository = new PostRepository();
     private Long recentId = 0L;
 
     private Post findPost(Long id) throws NoExistPostException {
-        Post post = postList.get(id);
+        Post post = postRepository.get(id);
         if (post == null) {
             throw new NoExistPostException();
         }
@@ -30,7 +30,7 @@ public class PostCommandService {
     public boolean checkWrite(String command) throws IOException {
         if (command.equals("작성")) {
             System.out.println("게시글을 작성합니다.");
-            postList.add(writePost());
+            postRepository.add(writePost());
             System.out.println("게시글이 작성되었습니다.");
             return true;
         }
@@ -58,7 +58,7 @@ public class PostCommandService {
         if (command.equals("목록")) {
             System.out.println("전체 게시글 목록입니다.");
             System.out.println("--------------------");
-            for (Post post : postList.getPosts()) {
+            for (Post post : postRepository.getPosts()) {
                 post.print();
             }
             return true;
@@ -81,7 +81,7 @@ public class PostCommandService {
     }
 
     private void deletePost(Long id) {
-        postList.remove(id);
+        postRepository.remove(id);
     }
 
     public boolean checkUpdate(String command) throws IOException, NoExistPostException {
@@ -102,6 +102,6 @@ public class PostCommandService {
         post.setTitle(title);
         post.setContent(content);
 
-        postList.replace(post.getId(), post);
+        postRepository.replace(post.getId(), post);
     }
 }

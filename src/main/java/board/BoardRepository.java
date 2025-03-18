@@ -6,7 +6,7 @@ import customException.InvalidValueException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardList {
+public class BoardRepository {
     private List<Board> boards = new ArrayList<>();
 
     public void add(Board board) throws InvalidValueException {

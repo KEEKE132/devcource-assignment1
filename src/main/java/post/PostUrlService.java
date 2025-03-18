@@ -1,7 +1,7 @@
 package post;
 
 import board.Board;
-import board.BoardList;
+import board.BoardRepository;
 import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
@@ -14,16 +14,16 @@ import java.io.InputStreamReader;
 
 public class PostUrlService {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private final PostList postList;
-    private final BoardList boardList;
+    private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
 
-    public PostUrlService(PostList postList, BoardList boardList) {
-        this.postList = postList;
-        this.boardList = boardList;
+    public PostUrlService(PostRepository postRepository, BoardRepository boardRepository) {
+        this.postRepository = postRepository;
+        this.boardRepository = boardRepository;
     }
 
     private Post findPost(Long id) throws NoExistPostException {
-        Post post = postList.get(id);
+        Post post = postRepository.get(id);
         if (post == null) {
             throw new NoExistPostException();
         }
@@ -39,7 +39,7 @@ public class PostUrlService {
     private void writePost(UrlData urlData) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
         try {
             Long boardId = Long.parseLong(urlData.getParameter("boardId"));
-            Board board = boardList.get(boardId);
+            Board board = boardRepository.get(boardId);
             System.out.print("제목을 입력해 주십시오. : ");
             String title = br.readLine();
             System.out.print("내용을 입력해 주십시오. : ");
@@ -49,7 +49,7 @@ public class PostUrlService {
             if (board == null) {
                 throw new NoExistBoardException();
             }
-            postList.add(post);
+            postRepository.add(post);
             board.addPost(post.getId());
 
         } catch (NumberFormatException e) {
@@ -95,7 +95,7 @@ public class PostUrlService {
 
     private void deletePost(Long id) throws NoExistPostException {
         Long boardId = findPost(id).getBoardId();
-        postList.remove(id);
+        postRepository.remove(id);
     }
 
     public void checkUpdate(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
