@@ -1,5 +1,6 @@
 package program;
 
+import board.BoardList;
 import board.BoardUrlController;
 import board.BoardUrlService;
 import customException.InvalidUrlException;
@@ -7,6 +8,7 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import post.PostList;
 import post.PostUrlController;
 import post.PostUrlService;
 import url.UrlData;
@@ -17,8 +19,17 @@ import java.io.InputStreamReader;
 
 public class UrlProgram implements Program {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private final PostUrlController postUrlController = new PostUrlController(new PostUrlService());
-    private final BoardUrlController boardUrlController = new BoardUrlController(new BoardUrlService());
+    private final PostUrlController postUrlController;
+    private final BoardUrlController boardUrlController;
+
+    public UrlProgram() {
+        PostList postList = new PostList();
+        BoardList boardList = new BoardList();
+        PostUrlService postUrlService = new PostUrlService(postList, boardList);
+        BoardUrlService boardUrlService = new BoardUrlService(boardList, postList);
+        this.postUrlController = new PostUrlController(postUrlService);
+        this.boardUrlController = new BoardUrlController(boardUrlService);
+    }
 
     @Override
     public void run() {

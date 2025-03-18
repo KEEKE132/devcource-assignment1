@@ -1,6 +1,7 @@
 package post;
 
 import customException.InvalidValueException;
+import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
 import url.UrlData;
@@ -17,7 +18,7 @@ public class PostUrlController {
         this.service = service;
     }
 
-    public boolean checkPath(UrlData urlData) throws InvalidValueException, NoExistPostException, NoExistParameterException, IOException {
+    public boolean checkPath(UrlData urlData) throws InvalidValueException, NoExistPostException, NoExistParameterException, IOException, NoExistBoardException {
         List<String> paths = urlData.getPath();
         if (!paths.get(0).equals(path)) return false;
 

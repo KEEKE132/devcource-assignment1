@@ -31,9 +31,21 @@ public class PostList {
         return false;
     }
 
-    public void printAll() {
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public List<Post> getPostsByBoardId(Long boardId) {
+        List<Post> postsByBoardId = new ArrayList<>();
         for (Post post : posts) {
-            post.print();
+            if (post.getBoardId().equals(boardId)) postsByBoardId.add(post);
+        }
+        return postsByBoardId;
+    }
+
+    public void removeByBoardId(Long boardId) {
+        for (Post post : posts) {
+            if (post.getBoardId().equals(boardId)) posts.remove(post);
         }
     }
 

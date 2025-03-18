@@ -58,7 +58,9 @@ public class PostCommandService {
         if (command.equals("목록")) {
             System.out.println("전체 게시글 목록입니다.");
             System.out.println("--------------------");
-            postList.printAll();
+            for (Post post : postList.getPosts()) {
+                post.print();
+            }
             return true;
         }
         return false;

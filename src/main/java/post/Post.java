@@ -1,16 +1,26 @@
 package post;
 
+import java.time.LocalDateTime;
+
 public class Post {
     private static Long idCounter = 1L;
 
     private final Long id;
     private String title;
     private String content;
+    private Long boardId;
+    private LocalDateTime createdAt;
 
     public Post(String title, String content) {
         this.id = idCounter++;
         this.title = title;
         this.content = content;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Post(String title, String content, Long boardId) {
+        this(title, content);
+        this.boardId = boardId;
     }
 
     public String getContent() {
@@ -31,6 +41,14 @@ public class Post {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getBoardId() {
+        return boardId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public void print() {

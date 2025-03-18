@@ -3,6 +3,8 @@ package board;
 import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
+import post.Post;
+import post.PostList;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -10,8 +12,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class BoardUrlService {
-    private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private BoardList boardList = new BoardList();
+    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private final BoardList boardList;
+    private final PostList postList;
+
+    public BoardUrlService(BoardList boardList, PostList postList) {
+        this.boardList = boardList;
+        this.postList = postList;
+    }
 
     private Board findBoard(Long id) throws NoExistBoardException {
         Board board = boardList.get(id);
@@ -31,16 +39,16 @@ public class BoardUrlService {
 
     public void checkWrite(UrlData urlData) throws IOException, InvalidValueException {
         System.out.println("게시판을 생성합니다.");
-        boardList.add(writeBoard());
+        writeBoard();
         System.out.println("게시판이 생성되었습니다.");
 
     }
 
-    private Board writeBoard() throws IOException {
+    private void writeBoard() throws IOException, InvalidValueException {
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();
 
-        return new Board(title);
+        boardList.add(new Board(title));
     }
 
     public void checkRead(UrlData urlData) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
@@ -64,13 +72,17 @@ public class BoardUrlService {
 //    }
 
     private void readBoard(Long id) throws NoExistBoardException {
-        Board board = findBoard(id);
-        board.view();
     }
 
     private void readBoard(String name) throws NoExistBoardException {
-        Board board = findBoard(name);
-        board.view();
+        Long boardId = boardList.get(name).getId();
+        StringBuilder sb = new StringBuilder();
+        sb.append(boardId).append("번 게시판\n");
+        sb.append("글 번호\t글 제목\t작성일").append("\n");
+        for (Post p : postList.getPostsByBoardId(boardId)) {
+            sb.append(p.getId()).append("\t").append(p.getTitle()).append("\t").append(p.getCreatedAt()).append("\n");
+        }
+        System.out.println(sb);
     }
 
     public void checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
@@ -85,6 +97,7 @@ public class BoardUrlService {
 
     private void deleteBoard(Long id) {
         boardList.remove(id);
+        postList.removeByBoardId(id);
     }
 
     public void checkUpdate(UrlData urlData) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
