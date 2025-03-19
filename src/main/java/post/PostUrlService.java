@@ -114,7 +114,6 @@ public class PostUrlService {
         String title = br.readLine();
         System.out.print("내용을 입력해 주십시오. : ");
         String content = br.readLine();
-        post.setTitle(title);
-        post.setContent(content);
+        post.update(title, content);
     }
 }

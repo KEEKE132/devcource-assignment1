@@ -10,12 +10,14 @@ public class Post {
     private String content;
     private Long boardId;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public Post(String title, String content) {
         this.id = idCounter++;
         this.title = title;
         this.content = content;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Post(String title, String content, Long boardId) {
@@ -49,6 +51,20 @@ public class Post {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void update(String title, String content) {
+        if (title != null && title != "") {
+            setTitle(title);
+        }
+        if (content != null && content != "") {
+            setContent(content);
+        }
+        updatedAt = LocalDateTime.now();
     }
 
     public void print() {
