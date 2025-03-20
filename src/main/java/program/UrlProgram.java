@@ -1,13 +1,18 @@
 package program;
 
+import account.AccountRepository;
+import account.AccountUrlController;
+import account.AccountUrlService;
 import board.BoardRepository;
 import board.BoardUrlController;
 import board.BoardUrlService;
 import customException.InvalidUrlException;
 import customException.InvalidValueException;
+import customException.NoExistAccountException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import customException.SignException;
 import post.PostRepository;
 import post.PostUrlController;
 import post.PostUrlService;
@@ -21,12 +26,16 @@ public class UrlProgram implements Program {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private final PostUrlController postUrlController;
     private final BoardUrlController boardUrlController;
+    private final AccountUrlController accountUrlController;
 
     public UrlProgram() {
         PostRepository postRepository = new PostRepository();
         BoardRepository boardRepository = new BoardRepository();
+        AccountRepository accountRepository = new AccountRepository();
         PostUrlService postUrlService = new PostUrlService(postRepository, boardRepository);
         BoardUrlService boardUrlService = new BoardUrlService(boardRepository, postRepository);
+        AccountUrlService accountUrlService = new AccountUrlService(accountRepository);
+        this.accountUrlController = new AccountUrlController(accountUrlService);
         this.postUrlController = new PostUrlController(postUrlService);
         this.boardUrlController = new BoardUrlController(boardUrlService);
     }
@@ -50,6 +59,13 @@ public class UrlProgram implements Program {
                 System.out.println("값이 올바르지 않습니다.: " + e.getMessage());
             } catch (NoExistBoardException e) {
                 System.out.println("존재하지 않는 게시판 입니다.");
+            } catch (NoExistAccountException e) {
+                System.out.println("존재하지 않는 계정입니다.");
+            } catch (SignException e) {
+                System.out.println("로그인에 문제가 발생했습니다.");
+                if (e.getMessage() != null) {
+                    System.out.println(e.getMessage());
+                }
             } finally {
                 System.out.println("--------------------");
             }
@@ -57,7 +73,7 @@ public class UrlProgram implements Program {
         System.out.println("프로그램을 종료합니다.");
     }
 
-    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException, NoExistBoardException {
+    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException, NoExistBoardException, NoExistAccountException, SignException {
         try {
             System.out.print("a");
             String url = br.readLine();
@@ -66,6 +82,7 @@ public class UrlProgram implements Program {
 
             if (postUrlController.checkPath(urlData)) return true;
             else if (boardUrlController.checkPath(urlData)) return true;
+            else if (accountUrlController.checkPath(urlData)) return true;
             throw new InvalidUrlException();
         } catch (InvalidUrlException e) {
             System.out.println("URL이 올바르지 않습니다.");
