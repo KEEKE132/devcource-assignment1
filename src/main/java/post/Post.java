@@ -11,6 +11,7 @@ public class Post {
     private Long boardId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long writerId;
 
     public Post(String title, String content) {
         this.id = idCounter++;
@@ -23,6 +24,13 @@ public class Post {
     public Post(String title, String content, Long boardId) {
         this(title, content);
         this.boardId = boardId;
+    }
+
+    public Post(String title, String content, Long boardId, Long writerId) {
+        this(title, content, boardId);
+        if (writerId != null) {
+            this.writerId = writerId;
+        }
     }
 
     public String getContent() {

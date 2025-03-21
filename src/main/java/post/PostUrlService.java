@@ -44,7 +44,7 @@ public class PostUrlService {
             System.out.print("내용을 입력해 주십시오. : ");
             String content = br.readLine();
 
-            Post post = new Post(title, content, boardId);
+            Post post = new Post(title, content, boardId, request.getSession().getSessionId());
 
             postRepository.add(post);
             board.addPost(post.getId());

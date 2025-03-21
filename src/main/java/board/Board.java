@@ -11,12 +11,20 @@ public class Board {
     private String title;
     private List<Long> postIds;
     private LocalDateTime createdAt;
+    private Long writerId = null;
 
     public Board(String title) {
         this.id = idCounter++;
         this.title = title;
         this.postIds = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Board(String title, Long writerId) {
+        this(title);
+        if (writerId != null) {
+            this.writerId = writerId;
+        }
     }
 
     public void addPost(Long id) {

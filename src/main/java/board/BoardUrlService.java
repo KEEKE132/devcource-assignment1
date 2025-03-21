@@ -42,7 +42,7 @@ public class BoardUrlService {
         System.out.println("게시판을 생성합니다.");
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();
-        Board board = new Board(title);
+        Board board = new Board(title, request.getSession().getSessionId());
         boardRepository.add(board);
         System.out.println("게시판이 생성되었습니다.");
         return Response.of();
