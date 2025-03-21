@@ -9,8 +9,12 @@ public class Response {
     private Map<String, String> parameter;
     private Session session;
 
-    public Response(Session session) {
+    public Response() {
         parameter = new HashMap<>();
+    }
+
+    public Response(Session session) {
+        this();
         this.session = session;
     }
 
@@ -22,6 +26,13 @@ public class Response {
     public Response addParameter(Map<String, String> parameter) {
         this.parameter.putAll(parameter);
         return this;
+    }
+
+    public boolean hasSession() {
+        if (session == null) {
+            return false;
+        }
+        return true;
     }
 
     public Session getSession() {
@@ -55,5 +66,9 @@ public class Response {
 
     public static Response of(Session session) {
         return new Response(session);
+    }
+
+    public static Response of() {
+        return new Response();
     }
 }

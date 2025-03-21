@@ -45,7 +45,7 @@ public class BoardUrlService {
         Board board = new Board(title);
         boardRepository.add(board);
         System.out.println("게시판이 생성되었습니다.");
-        return Response.of(request.getSession());
+        return Response.of();
     }
 
     public Response view(Request request) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
@@ -60,7 +60,7 @@ public class BoardUrlService {
             }
             System.out.println(sb);
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }
@@ -72,7 +72,7 @@ public class BoardUrlService {
             boardRepository.remove(boardId);
             postRepository.removeByBoardId(boardId);
             System.out.println("게시판이 삭제되었습니다.");
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }
@@ -87,7 +87,7 @@ public class BoardUrlService {
             board.setTitle(title);
             System.out.println("게시판이 수정되었습니다.");
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }

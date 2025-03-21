@@ -98,21 +98,21 @@ public class UrlProgram implements Program {
             Request request = new Request(url, session);
             if (checkExit(request)) return false;
 
+            Response response;
             if (postUrlController.checkPath(request)) {
-                Response response = postUrlController.enter(request);
-                session = response.getSession();
-                return true;
+                response = postUrlController.enter(request);
             } else if (boardUrlController.checkPath(request)) {
-                Response response = boardUrlController.enter(request);
-                session = response.getSession();
-                return true;
+                response = boardUrlController.enter(request);
             } else if (accountUrlController.checkPath(request)) {
-                Response response = accountUrlController.enter(request);
-                session = response.getSession();
-                return true;
+                response = accountUrlController.enter(request);
+            } else {
+                throw new InvalidUrlException();
             }
+            if (response.hasSession()) {
+                session = response.getSession();
+            }
+            return true;
 
-            throw new InvalidUrlException();
         } catch (InvalidUrlException e) {
             System.out.println("URL이 올바르지 않습니다.");
             return true;

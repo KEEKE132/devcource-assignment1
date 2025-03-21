@@ -31,7 +31,7 @@ public class AccountUrlService {
         String nickname = br.readLine();
         Account account = new Account(username, password, email, nickname);
         accountRepository.add(account);
-        return Response.of(request.getSession());
+        return Response.of();
     }
 
     public Response signIn(Request request) throws SignException, IOException, NoExistParameterException {
@@ -70,7 +70,7 @@ public class AccountUrlService {
         }
         System.out.println(id + "번 계정");
         account.print();
-        return Response.of(request.getSession());
+        return Response.of();
     }
 
     public Response edit(Request request) throws NoExistParameterException, IOException {
@@ -79,14 +79,13 @@ public class AccountUrlService {
         String password = br.readLine();
         System.out.print("새 이메일: ");
         String email = br.readLine();
-        accountRepository.get(id).setPassword(password);
-        accountRepository.get(id).setEmail(email);
-        return Response.of(request.getSession());
+        accountRepository.get(id).update(email, password);
+        return Response.of();
     }
 
     public Response remove(Request request) throws NoExistParameterException, InvalidValueException, NoExistAccountException {
         Long id = Long.parseLong(request.getParameter("accountId"));
         accountRepository.remove(id);
-        return Response.of(request.getSession());
+        return Response.of();
     }
 }

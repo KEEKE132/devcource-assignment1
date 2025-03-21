@@ -50,7 +50,7 @@ public class PostUrlService {
             board.addPost(post.getId());
             System.out.println("게시글이 작성되었습니다.");
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId");
         }
@@ -62,7 +62,7 @@ public class PostUrlService {
             Post post = findPost(postId);
             post.print();
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
@@ -77,7 +77,7 @@ public class PostUrlService {
             board.removePost(postId);
             System.out.println("게시글이 삭제되었습니다.");
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException | NoExistPostException e) {
             throw new InvalidValueException("postId", e);
         }
@@ -94,7 +94,7 @@ public class PostUrlService {
             post.update(title, content);
             System.out.println("게시글이 수정되었습니다.");
 
-            return Response.of(request.getSession());
+            return Response.of();
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }

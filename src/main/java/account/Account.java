@@ -43,6 +43,16 @@ public class Account {
         this.email = email;
     }
 
+    public void update(String email, String password) {
+        if (email != null && email != "") {
+            this.email = email;
+        }
+        if (password != null && password != "") {
+            this.password = password;
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public String getEmail() {
         return email;
     }
