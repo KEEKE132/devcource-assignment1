@@ -21,6 +21,7 @@ import post.PostUrlController;
 import post.PostUrlService;
 import url.Request;
 import url.Response;
+import url.Session;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +32,10 @@ public class UrlProgram implements Program {
     private final PostUrlController postUrlController;
     private final BoardUrlController boardUrlController;
     private final AccountUrlController accountUrlController;
-    private String sessionId = null;
+    private Session session;
 
     public UrlProgram() {
+        session = new Session();
         PostRepository postRepository = new PostRepository();
         BoardRepository boardRepository = new BoardRepository();
         AccountRepository accountRepository = new AccountRepository();
@@ -93,20 +95,20 @@ public class UrlProgram implements Program {
         try {
             System.out.print("a");
             String url = br.readLine();
-            Request request = new Request(url);
-            request.addParameter("sessionId", sessionId);
+            Request request = new Request(url, session);
             if (checkExit(request)) return false;
 
             if (postUrlController.checkPath(request)) {
                 Response response = postUrlController.enter(request);
+                session = response.getSession();
                 return true;
             } else if (boardUrlController.checkPath(request)) {
                 Response response = boardUrlController.enter(request);
+                session = response.getSession();
                 return true;
             } else if (accountUrlController.checkPath(request)) {
                 Response response = accountUrlController.enter(request);
-                if (response.hasParameter("signinId")) this.sessionId = response.getParameter("signinId");
-                else if (response.hasParameter("signoutId")) this.sessionId = null;
+                session = response.getSession();
                 return true;
             }
 

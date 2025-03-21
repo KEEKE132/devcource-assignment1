@@ -12,6 +12,7 @@ public class Request {
     private String url;
     private List<String> path;
     private Map<String, String> parameter;
+    private Session session;
     private final static UrlParser urlParser = new UrlParserImpl();
 
     public Request(String url) throws InvalidUrlException {
@@ -22,9 +23,19 @@ public class Request {
         parameter.putAll(urlParser.parseParameter(url));
     }
 
+    public Request(String url, Session session) throws InvalidUrlException {
+        this(url);
+        this.session = session;
+    }
+
     public String getURL() {
         return url;
     }
+
+    public Session getSession() {
+        return session;
+    }
+
 
     public List<String> getPath() {
         List<String> result = this.path;

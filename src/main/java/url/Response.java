@@ -7,19 +7,29 @@ import java.util.Map;
 
 public class Response {
     private Map<String, String> parameter;
+    private Session session;
 
-    public Response() {
+    public Response(Session session) {
         parameter = new HashMap<>();
+        this.session = session;
     }
 
-    public Response(String key, String value) {
-        this();
+    public Response(String key, String value, Session session) {
+        this(session);
         parameter.put(key, value);
     }
 
     public Response addParameter(Map<String, String> parameter) {
         this.parameter.putAll(parameter);
         return this;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public Response addParameter(String key, String value) {
@@ -43,11 +53,7 @@ public class Response {
         return parameter.get(param);
     }
 
-    public static Response of(String key, String value) {
-        return new Response(key, value);
-    }
-
-    public static Response of() {
-        return new Response();
+    public static Response of(Session session) {
+        return new Response(session);
     }
 }
