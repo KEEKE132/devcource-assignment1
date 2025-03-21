@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface UrlParser {
-    UrlData parseUrlData(String url) throws InvalidUrlException;
+    Request parseUrlData(String url) throws InvalidUrlException;
 
     List<String> parsePath(String url) throws InvalidUrlException;
 

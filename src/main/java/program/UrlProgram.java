@@ -19,8 +19,8 @@ import post.Post;
 import post.PostRepository;
 import post.PostUrlController;
 import post.PostUrlService;
+import url.Request;
 import url.Response;
-import url.UrlData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -93,18 +93,18 @@ public class UrlProgram implements Program {
         try {
             System.out.print("a");
             String url = br.readLine();
-            UrlData urlData = new UrlData(url);
-            urlData.addParameter("sessionId", sessionId);
-            if (checkExit(urlData)) return false;
+            Request request = new Request(url);
+            request.addParameter("sessionId", sessionId);
+            if (checkExit(request)) return false;
 
-            if (postUrlController.checkPath(urlData)) {
-                Response response = postUrlController.enter(urlData);
+            if (postUrlController.checkPath(request)) {
+                Response response = postUrlController.enter(request);
                 return true;
-            } else if (boardUrlController.checkPath(urlData)) {
-                Response response = boardUrlController.enter(urlData);
+            } else if (boardUrlController.checkPath(request)) {
+                Response response = boardUrlController.enter(request);
                 return true;
-            } else if (accountUrlController.checkPath(urlData)) {
-                Response response = accountUrlController.enter(urlData);
+            } else if (accountUrlController.checkPath(request)) {
+                Response response = accountUrlController.enter(request);
                 if (response.hasParameter("signinId")) this.sessionId = response.getParameter("signinId");
                 else if (response.hasParameter("signoutId")) this.sessionId = null;
                 return true;
@@ -117,8 +117,8 @@ public class UrlProgram implements Program {
         }
     }
 
-    private boolean checkExit(UrlData urlData) {
-        String first = urlData.getPath().get(0);
+    private boolean checkExit(Request request) {
+        String first = request.getPath().get(0);
         if (first.equals("exit")) {
             return true;
         }

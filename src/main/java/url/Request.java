@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UrlData {
+public class Request {
     private String url;
     private List<String> path;
     private Map<String, String> parameter;
     private final static UrlParser urlParser = new UrlParserImpl();
 
-    public UrlData(String url) throws InvalidUrlException {
+    public Request(String url) throws InvalidUrlException {
         this.url = url;
         path = new ArrayList<>();
         parameter = new HashMap<>();

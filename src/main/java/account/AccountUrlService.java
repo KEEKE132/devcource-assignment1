@@ -4,8 +4,8 @@ import customException.InvalidValueException;
 import customException.NoExistAccountException;
 import customException.NoExistParameterException;
 import customException.SignException;
+import url.Request;
 import url.Response;
-import url.UrlData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class AccountUrlService {
         this.accountRepository = accountRepository;
     }
 
-    public Response signUp(UrlData urlData) throws InvalidValueException, IOException {
+    public Response signUp(Request request) throws InvalidValueException, IOException {
         System.out.print("아이디: ");
         String username = br.readLine();
         System.out.print("비밀번호: ");
@@ -33,8 +33,8 @@ public class AccountUrlService {
         return Response.of("accountId", account.getId().toString());
     }
 
-    public Response signIn(UrlData urlData) throws SignException, IOException, NoExistParameterException {
-        if (urlData.getParameter("sessionId") != null) {
+    public Response signIn(Request request) throws SignException, IOException, NoExistParameterException {
+        if (request.getParameter("sessionId") != null) {
             throw new SignException("Already signed in");
         }
         System.out.print("아이디: ");
@@ -52,17 +52,17 @@ public class AccountUrlService {
         throw new SignException(new NoExistAccountException());
     }
 
-    public Response signOut(UrlData urlData) throws SignException, NoExistParameterException {
-        if (urlData.getParameter("sessionId") == null) {
+    public Response signOut(Request request) throws SignException, NoExistParameterException {
+        if (request.getParameter("sessionId") == null) {
             throw new SignException("already signed out");
         }
-        Response response = Response.of("signoutId", urlData.getParameter("sessionId"));
+        Response response = Response.of("signoutId", request.getParameter("sessionId"));
         System.out.println("로그아웃");
         return response;
     }
 
-    public Response detail(UrlData urlData) throws NoExistParameterException, NoExistAccountException {
-        Long id = Long.parseLong(urlData.getParameter("accountId"));
+    public Response detail(Request request) throws NoExistParameterException, NoExistAccountException {
+        Long id = Long.parseLong(request.getParameter("accountId"));
         Account account = accountRepository.get(id);
         if (account == null) {
             throw new NoExistAccountException();
@@ -72,8 +72,8 @@ public class AccountUrlService {
         return Response.of("accountId", id.toString());
     }
 
-    public Response edit(UrlData urlData) throws NoExistParameterException, IOException {
-        Long id = Long.parseLong(urlData.getParameter("accountId"));
+    public Response edit(Request request) throws NoExistParameterException, IOException {
+        Long id = Long.parseLong(request.getParameter("accountId"));
         System.out.print("새 비밀번호: ");
         String password = br.readLine();
         System.out.print("새 이메일: ");
@@ -83,8 +83,8 @@ public class AccountUrlService {
         return Response.of("accountId", id.toString());
     }
 
-    public Response remove(UrlData urlData) throws NoExistParameterException, InvalidValueException, NoExistAccountException {
-        Long id = Long.parseLong(urlData.getParameter("accountId"));
+    public Response remove(Request request) throws NoExistParameterException, InvalidValueException, NoExistAccountException {
+        Long id = Long.parseLong(request.getParameter("accountId"));
         accountRepository.remove(id);
         return Response.of("accountId", id.toString());
     }

@@ -5,8 +5,8 @@ import customException.InvalidValueException;
 import customException.NoExistAccountException;
 import customException.NoExistParameterException;
 import customException.SignException;
+import url.Request;
 import url.Response;
-import url.UrlData;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,8 +20,8 @@ public class AccountUrlController {
         this.service = service;
     }
 
-    public boolean checkPath(UrlData urlData) {
-        List<String> paths = urlData.getPath();
+    public boolean checkPath(Request request) {
+        List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) return false;
 
         return switch (paths.get(1)) {
@@ -35,33 +35,33 @@ public class AccountUrlController {
         };
     }
 
-    public Response enter(UrlData urlData) throws InvalidValueException, NoExistParameterException, IOException, NoExistAccountException, SignException, InvalidUrlException {
-        List<String> paths = urlData.getPath();
+    public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistAccountException, SignException, InvalidUrlException {
+        List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();
 
         return switch (paths.get(1)) {
             case "signup" -> {
-                yield service.signUp(urlData);
+                yield service.signUp(request);
             }
             case "signin" -> {
 
-                yield service.signIn(urlData);
+                yield service.signIn(request);
             }
             case "signout" -> {
 
-                yield service.signOut(urlData);
+                yield service.signOut(request);
             }
             case "edit" -> {
 
-                yield service.edit(urlData);
+                yield service.edit(request);
             }
             case "detail" -> {
 
-                yield service.detail(urlData);
+                yield service.detail(request);
             }
             case "remove" -> {
 
-                yield service.remove(urlData);
+                yield service.remove(request);
             }
             default -> throw new InvalidUrlException();
         };

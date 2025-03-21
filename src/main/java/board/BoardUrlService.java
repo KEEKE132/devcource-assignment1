@@ -5,8 +5,8 @@ import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import post.Post;
 import post.PostRepository;
+import url.Request;
 import url.Response;
-import url.UrlData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class BoardUrlService {
         return board;
     }
 
-    public Response add(UrlData urlData) throws IOException, InvalidValueException {
+    public Response add(Request request) throws IOException, InvalidValueException {
         System.out.println("게시판을 생성합니다.");
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();
@@ -48,9 +48,9 @@ public class BoardUrlService {
         return Response.of("boardId", board.getId().toString());
     }
 
-    public Response view(UrlData urlData) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
+    public Response view(Request request) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
         try {
-            String boardName = urlData.getParameter("boardName");
+            String boardName = request.getParameter("boardName");
             Long boardId = boardRepository.get(boardName).getId();
             StringBuilder sb = new StringBuilder();
             sb.append(boardId).append("번 게시판\n");
@@ -66,9 +66,9 @@ public class BoardUrlService {
         }
     }
 
-    public Response remove(UrlData urlData) throws InvalidValueException, NoExistParameterException {
+    public Response remove(Request request) throws InvalidValueException, NoExistParameterException {
         try {
-            Long boardId = Long.parseLong(urlData.getParameter("boardId"));
+            Long boardId = Long.parseLong(request.getParameter("boardId"));
             boardRepository.remove(boardId);
             postRepository.removeByBoardId(boardId);
             System.out.println("게시판이 삭제되었습니다.");
@@ -78,9 +78,9 @@ public class BoardUrlService {
         }
     }
 
-    public Response edit(UrlData urlData) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
+    public Response edit(Request request) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
         try {
-            Long boardId = Long.parseLong(urlData.getParameter("boardId"));
+            Long boardId = Long.parseLong(request.getParameter("boardId"));
             Board board = findBoard(boardId);
             System.out.print("게시판 이름을 입력해 주십시오. : ");
             String title = br.readLine();

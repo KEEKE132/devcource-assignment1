@@ -6,8 +6,8 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import url.Request;
 import url.Response;
-import url.UrlData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,10 +31,10 @@ public class PostUrlService {
         return post;
     }
 
-    public Response add(UrlData urlData) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
+    public Response add(Request request) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
         try {
             System.out.println("게시글을 작성합니다.");
-            Long boardId = Long.parseLong(urlData.getParameter("boardId"));
+            Long boardId = Long.parseLong(request.getParameter("boardId"));
             Board board = boardRepository.get(boardId);
             if (board == null) {
                 throw new NoExistBoardException();
@@ -56,9 +56,9 @@ public class PostUrlService {
         }
     }
 
-    public Response view(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
+    public Response view(Request request) throws NoExistPostException, NoExistParameterException, InvalidValueException {
         try {
-            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            Long postId = Long.parseLong(request.getParameter("postId"));
             Post post = findPost(postId);
             post.print();
 
@@ -68,9 +68,9 @@ public class PostUrlService {
         }
     }
 
-    public Response remove(UrlData urlData) throws InvalidValueException, NoExistParameterException {
+    public Response remove(Request request) throws InvalidValueException, NoExistParameterException {
         try {
-            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            Long postId = Long.parseLong(request.getParameter("postId"));
             Long boardId = findPost(postId).getBoardId();
             postRepository.remove(postId);
             Board board = boardRepository.get(boardId);
@@ -83,9 +83,9 @@ public class PostUrlService {
         }
     }
 
-    public Response edit(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
+    public Response edit(Request request) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
         try {
-            Long postId = Long.parseLong(urlData.getParameter("postId"));
+            Long postId = Long.parseLong(request.getParameter("postId"));
             Post post = findPost(postId);
             System.out.print("제목을 입력해 주십시오. : ");
             String title = br.readLine();

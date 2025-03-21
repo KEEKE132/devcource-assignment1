@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class UrlParserImpl implements UrlParser {
     @Override
-    public UrlData parseUrlData(String url) throws InvalidUrlException {
-        UrlData result = new UrlData(url);
+    public Request parseUrlData(String url) throws InvalidUrlException {
+        Request result = new Request(url);
         result.addPath(parsePath(url));
         result.addParameter(parseParameter(url));
         return result;
