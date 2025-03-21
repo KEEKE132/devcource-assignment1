@@ -6,6 +6,7 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import url.Response;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -30,90 +31,72 @@ public class PostUrlService {
         return post;
     }
 
-    public void checkWrite(UrlData urlData) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
-        System.out.println("게시글을 작성합니다.");
-        writePost(urlData);
-        System.out.println("게시글이 작성되었습니다.");
-    }
-
-    private void writePost(UrlData urlData) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
+    public Response add(UrlData urlData) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException {
         try {
+            System.out.println("게시글을 작성합니다.");
             Long boardId = Long.parseLong(urlData.getParameter("boardId"));
             Board board = boardRepository.get(boardId);
+            if (board == null) {
+                throw new NoExistBoardException();
+            }
             System.out.print("제목을 입력해 주십시오. : ");
             String title = br.readLine();
             System.out.print("내용을 입력해 주십시오. : ");
             String content = br.readLine();
 
             Post post = new Post(title, content, boardId);
-            if (board == null) {
-                throw new NoExistBoardException();
-            }
+
             postRepository.add(post);
             board.addPost(post.getId());
+            System.out.println("게시글이 작성되었습니다.");
 
+            return Response.of("postId", post.getId().toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId");
         }
-
     }
 
-    public void checkRead(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
+    public Response view(UrlData urlData) throws NoExistPostException, NoExistParameterException, InvalidValueException {
         try {
             Long postId = Long.parseLong(urlData.getParameter("postId"));
-            readPost(postId);
+            Post post = findPost(postId);
+            post.print();
+
+            return Response.of("postId", post.getId().toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
     }
 
-//    public boolean checkReadAll(UrlData urlData) {
-//        String first = urlData.getPath().get(0);
-//        if (command.equals("목록")) {
-//            System.out.println("전체 게시글 목록입니다.");
-//            System.out.println("--------------------");
-//            postList.printAll();
-//            return true;
-//        }
-//        return false;
-//    }
-
-    private void readPost(Long id) throws NoExistPostException {
-        Post post = findPost(id);
-        post.print();
-    }
-
-    public void checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
+    public Response remove(UrlData urlData) throws InvalidValueException, NoExistParameterException {
         try {
             Long postId = Long.parseLong(urlData.getParameter("postId"));
-            deletePost(postId);
+            Long boardId = findPost(postId).getBoardId();
+            postRepository.remove(postId);
+            Board board = boardRepository.get(boardId);
+            board.removePost(postId);
             System.out.println("게시글이 삭제되었습니다.");
+
+            return Response.of("postId", postId.toString());
         } catch (NumberFormatException | NoExistPostException e) {
             throw new InvalidValueException("postId", e);
         }
     }
 
-    private void deletePost(Long id) throws NoExistPostException {
-        Long boardId = findPost(id).getBoardId();
-        postRepository.remove(id);
-    }
-
-    public void checkUpdate(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
+    public Response edit(UrlData urlData) throws IOException, NoExistPostException, InvalidValueException, NoExistParameterException {
         try {
             Long postId = Long.parseLong(urlData.getParameter("postId"));
-            updatePost(postId);
+            Post post = findPost(postId);
+            System.out.print("제목을 입력해 주십시오. : ");
+            String title = br.readLine();
+            System.out.print("내용을 입력해 주십시오. : ");
+            String content = br.readLine();
+            post.update(title, content);
             System.out.println("게시글이 수정되었습니다.");
+
+            return Response.of("postId", postId.toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("postId", e);
         }
-    }
-
-    private void updatePost(Long id) throws IOException, NoExistPostException {
-        Post post = findPost(id);
-        System.out.print("제목을 입력해 주십시오. : ");
-        String title = br.readLine();
-        System.out.print("내용을 입력해 주십시오. : ");
-        String content = br.readLine();
-        post.update(title, content);
     }
 }

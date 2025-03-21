@@ -4,6 +4,7 @@ import customException.InvalidValueException;
 import customException.NoExistAccountException;
 import customException.NoExistParameterException;
 import customException.SignException;
+import url.Response;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -14,13 +15,11 @@ public class AccountUrlService {
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private final AccountRepository accountRepository;
 
-    private Account signInAccount = null;
-
     public AccountUrlService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
-    public Account signUp() throws InvalidValueException, IOException {
+    public Response signUp(UrlData urlData) throws InvalidValueException, IOException {
         System.out.print("아이디: ");
         String username = br.readLine();
         System.out.print("비밀번호: ");
@@ -31,11 +30,11 @@ public class AccountUrlService {
         String nickname = br.readLine();
         Account account = new Account(username, password, email, nickname);
         accountRepository.add(account);
-        return account;
+        return Response.of("accountId", account.getId().toString());
     }
 
-    public Account signIn() throws SignException, IOException {
-        if (signInAccount != null) {
+    public Response signIn(UrlData urlData) throws SignException, IOException, NoExistParameterException {
+        if (urlData.getParameter("sessionId") != null) {
             throw new SignException("Already signed in");
         }
         System.out.print("아이디: ");
@@ -45,24 +44,24 @@ public class AccountUrlService {
         Account account = accountRepository.get(username);
         if (account != null) {
             if (account.getPassword().equals(password)) {
-                signInAccount = account;
                 System.out.println("로그인");
-                return account;
+                return Response.of("signinId", account.getId().toString());
             }
             throw new SignException("wrong password");
         }
         throw new SignException(new NoExistAccountException());
     }
 
-    public void signOut() throws SignException {
-        if (signInAccount == null) {
+    public Response signOut(UrlData urlData) throws SignException, NoExistParameterException {
+        if (urlData.getParameter("sessionId") == null) {
             throw new SignException("already signed out");
         }
-        signInAccount = null;
+        Response response = Response.of("signoutId", urlData.getParameter("sessionId"));
         System.out.println("로그아웃");
+        return response;
     }
 
-    public void detail(UrlData urlData) throws NoExistParameterException, NoExistAccountException {
+    public Response detail(UrlData urlData) throws NoExistParameterException, NoExistAccountException {
         Long id = Long.parseLong(urlData.getParameter("accountId"));
         Account account = accountRepository.get(id);
         if (account == null) {
@@ -70,9 +69,10 @@ public class AccountUrlService {
         }
         System.out.println(id + "번 계정");
         account.print();
+        return Response.of("accountId", id.toString());
     }
 
-    public void edit(UrlData urlData) throws NoExistParameterException, IOException {
+    public Response edit(UrlData urlData) throws NoExistParameterException, IOException {
         Long id = Long.parseLong(urlData.getParameter("accountId"));
         System.out.print("새 비밀번호: ");
         String password = br.readLine();
@@ -80,10 +80,12 @@ public class AccountUrlService {
         String email = br.readLine();
         accountRepository.get(id).setPassword(password);
         accountRepository.get(id).setEmail(email);
+        return Response.of("accountId", id.toString());
     }
 
-    public void remove(UrlData urlData) throws NoExistParameterException, InvalidValueException, NoExistAccountException {
+    public Response remove(UrlData urlData) throws NoExistParameterException, InvalidValueException, NoExistAccountException {
         Long id = Long.parseLong(urlData.getParameter("accountId"));
         accountRepository.remove(id);
+        return Response.of("accountId", id.toString());
     }
 }

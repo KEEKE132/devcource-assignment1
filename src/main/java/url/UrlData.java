@@ -39,6 +39,10 @@ public class UrlData {
         this.parameter.putAll(parameter);
     }
 
+    public void addParameter(String key, String value) {
+        this.parameter.put(key, value);
+    }
+
     public Map<String, String> getParameters() {
         return new HashMap<>(this.parameter);
     }

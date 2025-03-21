@@ -1,8 +1,10 @@
 package board;
 
+import customException.InvalidUrlException;
 import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
+import url.Response;
 import url.UrlData;
 
 import java.io.IOException;
@@ -17,28 +19,37 @@ public class BoardUrlController {
         this.service = service;
     }
 
-    public boolean checkPath(UrlData urlData) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException {
+    public boolean checkPath(UrlData urlData) {
         List<String> paths = urlData.getPath();
         if (!paths.get(0).equals(path)) return false;
 
         return switch (paths.get(1)) {
+            case "add",
+                 "view",
+                 "remove",
+                 "edit" -> true;
+            default -> false;
+        };
+    }
+
+    public Response enter(UrlData urlData) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException {
+        List<String> paths = urlData.getPath();
+        if (!paths.get(0).equals(path)) throw new InvalidUrlException();
+
+        return switch (paths.get(1)) {
             case "add" -> {
-                service.checkWrite(urlData);
-                yield true;
+                yield service.add(urlData);
             }
             case "view" -> {
-                service.checkRead(urlData);
-                yield true;
+                yield service.view(urlData);
             }
             case "remove" -> {
-                service.checkDelete(urlData);
-                yield true;
+                yield service.remove(urlData);
             }
             case "edit" -> {
-                service.checkUpdate(urlData);
-                yield true;
+                yield service.edit(urlData);
             }
-            default -> false;
+            default -> throw new InvalidUrlException();
         };
     }
 }

@@ -1,8 +1,10 @@
 package program;
 
+import account.Account;
 import account.AccountRepository;
 import account.AccountUrlController;
 import account.AccountUrlService;
+import board.Board;
 import board.BoardRepository;
 import board.BoardUrlController;
 import board.BoardUrlService;
@@ -13,9 +15,11 @@ import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
 import customException.SignException;
+import post.Post;
 import post.PostRepository;
 import post.PostUrlController;
 import post.PostUrlService;
+import url.Response;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -27,6 +31,7 @@ public class UrlProgram implements Program {
     private final PostUrlController postUrlController;
     private final BoardUrlController boardUrlController;
     private final AccountUrlController accountUrlController;
+    private String sessionId = null;
 
     public UrlProgram() {
         PostRepository postRepository = new PostRepository();
@@ -38,7 +43,18 @@ public class UrlProgram implements Program {
         this.accountUrlController = new AccountUrlController(accountUrlService);
         this.postUrlController = new PostUrlController(postUrlService);
         this.boardUrlController = new BoardUrlController(boardUrlService);
+
+        try {
+            boardRepository.add(new Board("1"));
+            boardRepository.add(new Board("2"));
+            postRepository.add(new Post("11", "11", 1L));
+            postRepository.add(new Post("11", "11", 1L));
+            accountRepository.add(new Account("123", "123", "1@1", "keeke"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public void run() {
@@ -78,11 +94,22 @@ public class UrlProgram implements Program {
             System.out.print("a");
             String url = br.readLine();
             UrlData urlData = new UrlData(url);
+            urlData.addParameter("sessionId", sessionId);
             if (checkExit(urlData)) return false;
 
-            if (postUrlController.checkPath(urlData)) return true;
-            else if (boardUrlController.checkPath(urlData)) return true;
-            else if (accountUrlController.checkPath(urlData)) return true;
+            if (postUrlController.checkPath(urlData)) {
+                Response response = postUrlController.enter(urlData);
+                return true;
+            } else if (boardUrlController.checkPath(urlData)) {
+                Response response = boardUrlController.enter(urlData);
+                return true;
+            } else if (accountUrlController.checkPath(urlData)) {
+                Response response = accountUrlController.enter(urlData);
+                if (response.hasParameter("signinId")) this.sessionId = response.getParameter("signinId");
+                else if (response.hasParameter("signoutId")) this.sessionId = null;
+                return true;
+            }
+
             throw new InvalidUrlException();
         } catch (InvalidUrlException e) {
             System.out.println("URL이 올바르지 않습니다.");

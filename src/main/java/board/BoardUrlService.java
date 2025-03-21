@@ -5,6 +5,7 @@ import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import post.Post;
 import post.PostRepository;
+import url.Response;
 import url.UrlData;
 
 import java.io.BufferedReader;
@@ -37,83 +38,58 @@ public class BoardUrlService {
         return board;
     }
 
-    public void checkWrite(UrlData urlData) throws IOException, InvalidValueException {
+    public Response add(UrlData urlData) throws IOException, InvalidValueException {
         System.out.println("게시판을 생성합니다.");
-        writeBoard();
-        System.out.println("게시판이 생성되었습니다.");
-
-    }
-
-    private void writeBoard() throws IOException, InvalidValueException {
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();
-
-        boardRepository.add(new Board(title));
+        Board board = new Board(title);
+        boardRepository.add(board);
+        System.out.println("게시판이 생성되었습니다.");
+        return Response.of("boardId", board.getId().toString());
     }
 
-    public void checkRead(UrlData urlData) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
+    public Response view(UrlData urlData) throws NoExistBoardException, NoExistParameterException, InvalidValueException {
         try {
             String boardName = urlData.getParameter("boardName");
-            readBoard(boardName);
+            Long boardId = boardRepository.get(boardName).getId();
+            StringBuilder sb = new StringBuilder();
+            sb.append(boardId).append("번 게시판\n");
+            sb.append("글번호\t글 제목\t작성일").append("\n");
+            for (Post p : postRepository.getPostsByBoardId(boardId)) {
+                sb.append(p.getId()).append("\t").append(p.getTitle()).append("\t").append(p.getCreatedAt().toLocalDate()).append("\n");
+            }
+            System.out.println(sb);
+
+            return Response.of("boardId", boardId.toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }
     }
 
-//    public boolean checkReadAll(UrlData urlData) {
-//        String first = urlData.getPath().get(0);
-//        if (command.equals("목록")) {
-//            System.out.println("전체 게시글 목록입니다.");
-//            System.out.println("--------------------");
-//            boardList.printAll();
-//            return true;
-//        }
-//        return false;
-//    }
-
-    private void readBoard(Long id) throws NoExistBoardException {
-    }
-
-    private void readBoard(String name) throws NoExistBoardException {
-        Long boardId = boardRepository.get(name).getId();
-        StringBuilder sb = new StringBuilder();
-        sb.append(boardId).append("번 게시판\n");
-        sb.append("글 번호\t글 제목\t작성일").append("\n");
-        for (Post p : postRepository.getPostsByBoardId(boardId)) {
-            sb.append(p.getId()).append("\t").append(p.getTitle()).append("\t").append(p.getCreatedAt()).append("\n");
-        }
-        System.out.println(sb);
-    }
-
-    public void checkDelete(UrlData urlData) throws InvalidValueException, NoExistParameterException {
+    public Response remove(UrlData urlData) throws InvalidValueException, NoExistParameterException {
         try {
             Long boardId = Long.parseLong(urlData.getParameter("boardId"));
-            deleteBoard(boardId);
+            boardRepository.remove(boardId);
+            postRepository.removeByBoardId(boardId);
             System.out.println("게시판이 삭제되었습니다.");
+            return Response.of("boardId", boardId.toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }
     }
 
-    private void deleteBoard(Long id) {
-        boardRepository.remove(id);
-        postRepository.removeByBoardId(id);
-    }
-
-    public void checkUpdate(UrlData urlData) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
+    public Response edit(UrlData urlData) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
         try {
             Long boardId = Long.parseLong(urlData.getParameter("boardId"));
-            updateBoard(boardId);
+            Board board = findBoard(boardId);
+            System.out.print("게시판 이름을 입력해 주십시오. : ");
+            String title = br.readLine();
+            board.setTitle(title);
             System.out.println("게시판이 수정되었습니다.");
+
+            return Response.of("boardId", boardId.toString());
         } catch (NumberFormatException e) {
             throw new InvalidValueException("boardId", e);
         }
-    }
-
-    private void updateBoard(Long id) throws IOException, NoExistBoardException {
-        Board board = findBoard(id);
-        System.out.print("게시판 이름을 입력해 주십시오. : ");
-        String title = br.readLine();
-        board.setTitle(title);
     }
 }
