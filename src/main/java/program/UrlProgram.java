@@ -2,6 +2,7 @@ package program;
 
 import account.Account;
 import account.AccountRepository;
+import account.AccountType;
 import account.AccountUrlController;
 import account.AccountUrlService;
 import board.Board;
@@ -14,6 +15,7 @@ import customException.NoExistAccountException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import customException.NotAllowedAuthorityException;
 import customException.SignException;
 import post.Post;
 import post.PostRepository;
@@ -51,6 +53,9 @@ public class UrlProgram implements Program {
             boardRepository.add(new Board("2"));
             postRepository.add(new Post("11", "11", 1L));
             postRepository.add(new Post("11", "11", 1L));
+            Account account = new Account("admin", "admin", "admin", "admin");
+            account.setAccountType(AccountType.ADMIN);
+            accountRepository.add(account);
             accountRepository.add(new Account("123", "123", "1@1", "keeke"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,6 +89,8 @@ public class UrlProgram implements Program {
                 if (e.getMessage() != null) {
                     System.out.println(e.getMessage());
                 }
+            } catch (NotAllowedAuthorityException e) {
+                System.out.println("권한이 없습니다.");
             } finally {
                 System.out.println("--------------------");
             }
@@ -91,9 +98,10 @@ public class UrlProgram implements Program {
         System.out.println("프로그램을 종료합니다.");
     }
 
-    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException, NoExistBoardException, NoExistAccountException, SignException {
+    private boolean readUrl() throws IOException, InvalidValueException, NoExistPostException, NoExistParameterException, NoExistBoardException, NoExistAccountException, SignException, NotAllowedAuthorityException {
         try {
             System.out.print("a");
+            System.out.print("(" + (session.isSigned() ? session.getNickname() : "none") + ")");
             String url = br.readLine();
             Request request = new Request(url, session);
             if (checkExit(request)) return false;

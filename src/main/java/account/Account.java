@@ -12,6 +12,7 @@ public class Account {
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private AccountType accountType;
 
     public Account(String username, String password, String email, String nickname) {
         id = idCounter++;
@@ -21,6 +22,7 @@ public class Account {
         this.nickname = nickname;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.accountType = AccountType.USER;
     }
 
     public Long getId() {
@@ -41,6 +43,14 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public void update(String email, String password) {

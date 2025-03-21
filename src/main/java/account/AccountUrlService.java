@@ -46,7 +46,7 @@ public class AccountUrlService {
         if (account != null) {
             if (account.getPassword().equals(password)) {
                 System.out.println("로그인");
-                return Response.of(new Session(account.getId()));
+                return Response.of(new Session(account));
             }
             throw new SignException("wrong password");
         }

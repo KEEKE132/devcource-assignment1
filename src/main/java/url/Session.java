@@ -1,13 +1,20 @@
 package url;
 
+import account.Account;
+import account.AccountType;
+
 public class Session {
     private Long sessionId = null;
+    private String nickname = null;
+    private AccountType accountType = null;
 
     public Session() {
     }
 
-    public Session(Long sessionId) {
-        this.sessionId = sessionId;
+    public Session(Account account) {
+        this.sessionId = account.getId();
+        this.nickname = account.getNickname();
+        this.accountType = account.getAccountType();
     }
 
     public boolean isSigned() {
@@ -18,8 +25,11 @@ public class Session {
         return sessionId;
     }
 
-    public void setSessionId(Long sessionId) {
-        this.sessionId = sessionId;
+    public String getNickname() {
+        return nickname;
     }
 
+    public AccountType getAccountType() {
+        return accountType;
+    }
 }

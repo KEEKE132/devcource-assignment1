@@ -11,7 +11,7 @@ public class BoardRepository {
 
     public void add(Board board) throws InvalidValueException {
         if (get(board.getTitle()) != null) {
-            throw new InvalidValueException("boardName", new DuplicateBoardNameException("boardName"));
+            throw new InvalidValueException("boardName", new DuplicateBoardNameException("boardName Duplicated"));
         }
         boards.add(board);
     }

@@ -1,8 +1,10 @@
 package board;
 
+import account.AccountType;
 import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
+import customException.NotAllowedAuthorityException;
 import post.Post;
 import post.PostRepository;
 import url.Request;
@@ -38,7 +40,10 @@ public class BoardUrlService {
         return board;
     }
 
-    public Response add(Request request) throws IOException, InvalidValueException {
+    public Response add(Request request) throws IOException, InvalidValueException, NotAllowedAuthorityException {
+        if (request.getSession().getAccountType() != AccountType.ADMIN) {
+            throw new NotAllowedAuthorityException();
+        }
         System.out.println("게시판을 생성합니다.");
         System.out.print("게시판 이름을 입력해 주십시오. : ");
         String title = br.readLine();

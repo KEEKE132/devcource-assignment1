@@ -4,6 +4,7 @@ import customException.InvalidUrlException;
 import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
+import customException.NotAllowedAuthorityException;
 import url.Request;
 import url.Response;
 
@@ -32,7 +33,7 @@ public class BoardUrlController {
         };
     }
 
-    public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException {
+    public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException, NotAllowedAuthorityException {
         List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();
 
