@@ -46,4 +46,8 @@ public class Board {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public Long getWriterId() {
+        return writerId;
+    }
 }

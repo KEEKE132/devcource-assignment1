@@ -5,6 +5,7 @@ import customException.InvalidValueException;
 import customException.NoExistBoardException;
 import customException.NoExistParameterException;
 import customException.NoExistPostException;
+import customException.NotAllowedAuthorityException;
 import url.Request;
 import url.Response;
 
@@ -33,7 +34,7 @@ public class PostUrlController {
         };
     }
 
-    public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException, NoExistPostException {
+    public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException, NoExistPostException, NotAllowedAuthorityException {
         List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();
 

@@ -65,6 +65,10 @@ public class Post {
         return updatedAt;
     }
 
+    public Long getWriterId() {
+        return writerId;
+    }
+
     public void update(String title, String content) {
         if (title != null && title != "") {
             setTitle(title);

@@ -41,7 +41,7 @@ public class BoardUrlService {
     }
 
     public Response add(Request request) throws IOException, InvalidValueException, NotAllowedAuthorityException {
-        if (request.getSession().getAccountType() != AccountType.ADMIN) {
+        if (!request.getSession().isSigned() || request.getSession().getAccountType() != AccountType.ADMIN) {
             throw new NotAllowedAuthorityException();
         }
         System.out.println("게시판을 생성합니다.");
@@ -71,8 +71,11 @@ public class BoardUrlService {
         }
     }
 
-    public Response remove(Request request) throws InvalidValueException, NoExistParameterException {
+    public Response remove(Request request) throws InvalidValueException, NoExistParameterException, NotAllowedAuthorityException {
         try {
+            if (!request.getSession().isSigned() || request.getSession().getAccountType() != AccountType.ADMIN) {
+                throw new NotAllowedAuthorityException();
+            }
             Long boardId = Long.parseLong(request.getParameter("boardId"));
             boardRepository.remove(boardId);
             postRepository.removeByBoardId(boardId);
@@ -83,8 +86,11 @@ public class BoardUrlService {
         }
     }
 
-    public Response edit(Request request) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException {
+    public Response edit(Request request) throws IOException, NoExistBoardException, InvalidValueException, NoExistParameterException, NotAllowedAuthorityException {
         try {
+            if (!request.getSession().isSigned() || request.getSession().getAccountType() != AccountType.ADMIN) {
+                throw new NotAllowedAuthorityException();
+            }
             Long boardId = Long.parseLong(request.getParameter("boardId"));
             Board board = findBoard(boardId);
             System.out.print("게시판 이름을 입력해 주십시오. : ");

@@ -51,8 +51,8 @@ public class UrlProgram implements Program {
         try {
             boardRepository.add(new Board("1"));
             boardRepository.add(new Board("2"));
-            postRepository.add(new Post("11", "11", 1L));
-            postRepository.add(new Post("11", "11", 1L));
+            postRepository.add(new Post("11", "11", 1L, 1L));
+            postRepository.add(new Post("11", "11", 1L, 2L));
             Account account = new Account("admin", "admin", "admin", "admin");
             account.setAccountType(AccountType.ADMIN);
             accountRepository.add(account);
