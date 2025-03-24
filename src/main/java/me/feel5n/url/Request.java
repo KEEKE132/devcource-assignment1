@@ -42,6 +42,14 @@ public class Request {
         return new ArrayList<>(result);
     }
 
+    public String pathToString() {
+        StringBuilder result = new StringBuilder();
+        for (String s : path) {
+            result.append("/").append(s);
+        }
+        return result.toString();
+    }
+
     public void addPath(Iterable<String> path) {
         for (String p : path) this.path.add(p);
     }

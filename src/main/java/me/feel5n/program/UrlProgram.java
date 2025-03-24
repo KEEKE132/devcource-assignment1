@@ -12,6 +12,7 @@ import me.feel5n.customException.NoExistParameterException;
 import me.feel5n.customException.NoExistPostException;
 import me.feel5n.customException.NotAllowedAuthorityException;
 import me.feel5n.customException.SignException;
+import me.feel5n.filter.Filter;
 import me.feel5n.post.PostUrlController;
 import me.feel5n.url.Request;
 import me.feel5n.url.Response;
@@ -28,7 +29,6 @@ public class UrlProgram implements Program {
     public UrlProgram() {
         session = new Session();
     }
-
 
     @Override
     public void run() {
@@ -76,7 +76,13 @@ public class UrlProgram implements Program {
             if (checkExit(request)) return false;
 
             Response response;
-            Controller controller = getController(request.getPath().get(0));
+            Filter filter = new Filter(request);
+            Controller controller;
+            if (filter.isValidRequest()) {
+                controller = getController(request.getPath().get(0));
+            } else {
+                throw new NotAllowedAuthorityException();
+            }
             if (controller == null) {
                 throw new InvalidUrlException();
             } else {

@@ -36,9 +36,6 @@ public class PostUrlService {
 
     public Response add(Request request) throws IOException, NoExistParameterException, InvalidValueException, NoExistBoardException, NotAllowedAuthorityException {
         try {
-            if (!request.getSession().isSigned()) {
-                throw new NotAllowedAuthorityException();
-            }
             System.out.println("게시글을 작성합니다.");
             Long boardId = Long.parseLong(request.getParameter("boardId"));
             Board board = boardRepository.get(boardId);
@@ -81,7 +78,6 @@ public class PostUrlService {
             if (hasAuthority(request)) {
                 throw new NotAllowedAuthorityException();
             }
-
             Long boardId = post.getBoardId();
             postRepository.remove(postId);
             Board board = boardRepository.get(boardId);
@@ -117,10 +113,6 @@ public class PostUrlService {
     private boolean hasAuthority(Request request) throws NoExistParameterException, NoExistPostException {
         Session session = request.getSession();
         Post post = findPost(Long.parseLong(request.getParameter("postId")));
-        if (!session.isSigned()) return false;
-        if (!session.getAccountType().equals(AccountType.ADMIN) && !session.getSessionId().equals(post.getWriterId()))
-            return false;
-
-        return true;
+        return session.getAccountType().equals(AccountType.ADMIN) || session.getSessionId().equals(post.getWriterId());
     }
 }

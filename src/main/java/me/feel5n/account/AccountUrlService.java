@@ -35,9 +35,6 @@ public class AccountUrlService {
     }
 
     public Response signIn(Request request) throws SignException, IOException, NoExistParameterException {
-        if (request.getSession().isSigned()) {
-            throw new SignException("Already signed in");
-        }
         System.out.print("아이디: ");
         String username = br.readLine();
         System.out.print("비밀번호: ");
@@ -54,9 +51,6 @@ public class AccountUrlService {
     }
 
     public Response signOut(Request request) throws SignException, NoExistParameterException {
-        if (!request.getSession().isSigned()) {
-            throw new SignException("already signed out");
-        }
         Response response = Response.of(new Session());
         System.out.println("로그아웃");
         return response;
