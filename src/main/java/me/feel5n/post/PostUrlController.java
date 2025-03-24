@@ -22,19 +22,6 @@ public class PostUrlController implements Controller {
         this.service = service;
     }
 
-    public boolean checkPath(Request request) {
-        List<String> paths = request.getPath();
-        if (!paths.get(0).equals(path)) return false;
-
-        return switch (paths.get(1)) {
-            case "add",
-                 "view",
-                 "remove",
-                 "edit" -> true;
-            default -> false;
-        };
-    }
-
     public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException, NoExistPostException, NotAllowedAuthorityException {
         List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();

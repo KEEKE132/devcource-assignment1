@@ -21,21 +21,6 @@ public class AccountUrlController implements Controller {
         this.service = service;
     }
 
-    public boolean checkPath(Request request) {
-        List<String> paths = request.getPath();
-        if (!paths.get(0).equals(path)) return false;
-
-        return switch (paths.get(1)) {
-            case "signup",
-                 "signin",
-                 "signout",
-                 "edit",
-                 "detail",
-                 "remove" -> true;
-            default -> false;
-        };
-    }
-
     public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistAccountException, SignException, InvalidUrlException {
         List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();

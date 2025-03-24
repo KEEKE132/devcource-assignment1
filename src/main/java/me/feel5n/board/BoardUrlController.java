@@ -20,20 +20,6 @@ public class BoardUrlController implements Controller {
     }
 
     @Override
-    public boolean checkPath(Request request) {
-        List<String> paths = request.getPath();
-        if (!paths.get(0).equals(path)) return false;
-
-        return switch (paths.get(1)) {
-            case "add",
-                 "view",
-                 "remove",
-                 "edit" -> true;
-            default -> false;
-        };
-    }
-
-    @Override
     public Response enter(Request request) throws InvalidValueException, NoExistParameterException, IOException, NoExistBoardException, InvalidUrlException, NotAllowedAuthorityException {
         List<String> paths = request.getPath();
         if (!paths.get(0).equals(path)) throw new InvalidUrlException();
